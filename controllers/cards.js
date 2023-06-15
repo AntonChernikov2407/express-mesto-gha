@@ -15,7 +15,12 @@ const deleteCardById = (req, res) => {
       }
       return res.status(200).send({ message: 'Карточка удалена' });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные' });
+      }
+      return res.status(500).send({ message: err.message });
+    });
 };
 
 const createCard = (req, res) => {
@@ -39,7 +44,7 @@ const putLikeById = (req, res) => {
       return res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные' });
       }
       return res.status(500).send({ message: err.message });
@@ -55,7 +60,7 @@ const deleteLikeById = (req, res) => {
       return res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         return res.status(400).send({ message: 'Переданы некорректные данные' });
       }
       return res.status(500).send({ message: err.message });

@@ -10,4 +10,4 @@
 3. MongoDB
 4. Mongoose
 
-Ссылка на репозиторий на GitHub Pages: 
+Ссылка на репозиторий на GitHub Pages: https://antonchernikov2407.github.io/express-mesto-gha
