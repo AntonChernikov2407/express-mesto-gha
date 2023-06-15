@@ -6,8 +6,11 @@ const handleError = (err, req, res, next) => {
   if (err.name === 'Error') {
     return res.status(404).send(req.path.includes('cards') ? cardNotFound : userNotFound);
   }
-  // eslint-disable-next-line no-constant-condition
-  if (err.name === 'CastError' || 'ValidationError') {
+  if (err.name === 'ValidationError') {
+    // console.log(`${Object.values(err.errors).map((err) => err.message).join(', ')}`);
+    return res.status(400).send({ message: `${Object.values(err.errors).map((error) => error.message).join(', ')}` });
+  }
+  if (err.name === 'CastError') {
     return res.status(400).send({ message: 'Переданы некорректные данные' });
   }
   return res.status(500).send({ message: 'Что-то пошло не так' });
