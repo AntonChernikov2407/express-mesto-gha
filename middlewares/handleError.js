@@ -6,6 +6,7 @@ const handleError = (err, req, res, next) => {
   if (err.name === 'Error') {
     return res.status(404).send(req.path.includes('cards') ? cardNotFound : userNotFound);
   }
+  // eslint-disable-next-line no-constant-condition
   if (err.name === 'CastError' || 'ValidationError') {
     return res.status(400).send({ message: 'Переданы некорректные данные' });
   }
