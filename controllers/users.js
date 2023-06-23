@@ -10,7 +10,14 @@ const getUsers = (req, res, next) => User.find({})
 
 const getUserById = (req, res, next) => User.findById(req.params.userId)
   .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
-  .then((user) => res.send({ data: user }))
+  .then((user) => {
+    const {
+      name, about, avatar, email,
+    } = user;
+    res.send({
+      name, about, avatar, email,
+    });
+  })
   .catch(next);
 
 const getThisUserById = (req, res, next) => User.findById(req.user._id)
@@ -24,12 +31,10 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({ email, password: hash }))
     .then((user) => {
       const {
-        _id, name, about, avatar,
+        name, about, avatar,
       } = user;
       res.status(201).send({
-        data: {
-          _id, name, about, avatar, email,
-        },
+        name, about, avatar, email,
       });
     })
     .catch((err) => {
