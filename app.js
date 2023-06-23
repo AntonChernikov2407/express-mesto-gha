@@ -28,11 +28,11 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.use(errors());
-// app.use('/users', auth, require('./routes/users'));
+app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use(require('./middlewares/handleCelebrateError'));
+app.use(errors());
+// app.use(require('./middlewares/handleCelebrateError'));
 app.use(require('./middlewares/handleError'));
 
 app.use('*', (req, res) => { res.status(404).send({ message: 'Страница не найдена' }); });
