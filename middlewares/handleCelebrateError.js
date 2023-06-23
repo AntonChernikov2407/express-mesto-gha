@@ -9,7 +9,9 @@ const handleCelebrateError = (err, req, res, next) => {
     if (err.details.has('body')) {
       celebrateError = err.details.get('body');
     }
-    return res.status(400).send({ message: celebrateError.details.map((error) => error.message).toString() });
+    res
+      .status(400)
+      .send({ message: celebrateError.details.map((error) => error.message).toString() });
   }
   next(err);
 };

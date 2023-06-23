@@ -1,6 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictError = require('../errors/conflict-error');
 
@@ -52,10 +52,10 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      res.send({token});
+      res.send({ token });
     })
     .catch(next);
-}
+};
 
 module.exports = {
   getUsers,
@@ -64,5 +64,5 @@ module.exports = {
   createUser,
   updateProfileById,
   updateAvatarById,
-  login
+  login,
 };

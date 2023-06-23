@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+
+// eslint-disable-next-line no-useless-escape
 const pattern = /(?:(?:https?):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/i;
 const {
   getCards,
@@ -13,23 +15,24 @@ router.get('/', getCards);
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
-  }), 
+  }),
 }), deleteCardById);
 router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().min(2).max(30).required().regex(pattern),
+    link: Joi.string().min(2).max(30).required()
+      .regex(pattern),
   }),
 }), createCard);
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
-  }), 
+  }),
 }), putLikeById);
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
-  }), 
+  }),
 }), deleteLikeById);
 
 module.exports = router;
