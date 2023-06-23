@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
 
 const cardSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  link: {
-    type: String,
-  },
+  name: { type: String },
+  link: { type: String },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
