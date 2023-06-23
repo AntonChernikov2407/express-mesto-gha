@@ -27,7 +27,9 @@ const createUser = (req, res, next) => {
         _id, name, about, avatar,
       } = user;
       res.status(201).send({
-        _id, name, about, avatar, email,
+        data: {
+          _id, name, about, avatar, email,
+        },
       });
     })
     .catch((err) => {
