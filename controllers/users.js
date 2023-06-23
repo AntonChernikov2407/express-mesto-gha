@@ -22,7 +22,14 @@ const createUser = (req, res, next) => {
   const { email, password } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, password: hash }))
-    .then((user) => res.status(201).send({ data: user }))
+    .then((user) => {
+      const {
+        _id, name, about, avatar,
+      } = user;
+      res.status(201).send({
+        _id, name, about, avatar, email,
+      });
+    })
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
