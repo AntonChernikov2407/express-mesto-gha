@@ -11,12 +11,7 @@ const getUsers = (req, res, next) => User.find({})
 const getUserById = (req, res, next) => User.findById(req.params.userId)
   .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
   .then((user) => {
-    const {
-      name, about, avatar, email,
-    } = user;
-    res.send({
-      name, about, avatar, email,
-    });
+    res.send({ data: user });
   })
   .catch(next);
 
@@ -26,15 +21,15 @@ const getThisUserById = (req, res, next) => User.findById(req.user._id)
   .catch(next);
 
 const createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, password: hash }))
     .then((user) => {
-      const {
-        name, about, avatar,
-      } = user;
+      // const { _id } = user;
       res.status(201).send({
-        name, about, avatar, email,
+        _id: user._id, name, about, avatar, email,
       });
     })
     .catch((err) => {

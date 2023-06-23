@@ -3,18 +3,9 @@ const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/unauthorized-error');
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    default: 'Жак-Ив Кусто',
-  },
-  about: {
-    type: String,
-    default: 'Исследователь',
-  },
-  avatar: {
-    type: String,
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-  },
+  name: { type: String },
+  about: { type: String },
+  avatar: { type: String },
   email: {
     type: String,
     unique: true,
