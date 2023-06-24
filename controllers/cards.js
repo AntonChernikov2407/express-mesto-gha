@@ -14,12 +14,12 @@ const deleteCardById = (req, res, next) => {
     .orFail(new NotFoundError('Карточка с указанным id не найдена'))
     .then((card) => {
       const cardOwner = card.owner.toString();
-      if (cardOwner === req.user._id) {
-        Card.findByIdAndRemove(req.params.cardId)
-          .then(() => res.send({ message: 'Карточка удалена' }))
-          .catch(next);
+      if (cardOwner !== req.user._id) {
+        throw new ForbiddenError('Вы не можете удалять карточки других пользователй');
       }
-      throw new ForbiddenError('Вы не можете удалять карточки других пользователй');
+      Card.findByIdAndRemove(req.params.cardId)
+        .then(() => res.send({ message: 'Карточка удалена' }))
+        .catch(next);
     })
     .catch(next);
 };
