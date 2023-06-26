@@ -1,4 +1,4 @@
 // eslint-disable-next-line no-useless-escape
-const pattern = /https?\:\/\/\w*\S*\.\w*\S*/i;
+const pattern = /https?\:\/\/[a-z0-9]\S*\.[a-z0-9]\S*/i;
 
 module.exports = pattern;
