@@ -2,10 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const { celebrate, Joi, errors } = require('celebrate');
-const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-const pattern = require('./utils/pattern');
+const { errors } = require('celebrate');
+const routes = require('./routes/index');
 
 const app = express();
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
@@ -16,29 +14,10 @@ app.use(helmet());
 
 mongoose.connect(DB_URL, { useNewUrlParser: true });
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().min(8).required(),
-  }),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().min(8).required(),
-    name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
-    about: Joi.string().min(2).max(30).default('Исследователь'),
-    avatar: Joi.string().regex(pattern).default('https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'),
-  }),
-}), createUser);
-
-app.use('/users', auth, require('./routes/users'));
-app.use('/cards', auth, require('./routes/cards'));
+app.use(routes);
 
 app.use(errors());
 // app.use(require('./middlewares/handleCelebrateError'));
 app.use(require('./middlewares/handleError'));
-
-app.use('*', (req, res) => { res.status(404).send({ message: 'Страница не найдена' }); });
 
 app.listen(PORT);

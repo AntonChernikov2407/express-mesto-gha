@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictError = require('../errors/conflict-error');
+const ValidationError = require('../errors/validation-error');
 
 const getUsers = (req, res, next) => User.find({})
   .then((users) => res.send({ data: users }))
@@ -37,6 +38,9 @@ const createUser = (req, res, next) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
       }
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.message));
+      }
       next(err);
     });
 };
@@ -46,7 +50,12 @@ const updateProfileById = (req, res, next) => {
   return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.message));
+      }
+      next(err);
+    });
 };
 
 const updateAvatarById = (req, res, next) => {
@@ -54,7 +63,12 @@ const updateAvatarById = (req, res, next) => {
   return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.message));
+      }
+      next(err);
+    });
 };
 
 const login = (req, res, next) => {

@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
+const ValidationError = require('../errors/validation-error');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -28,7 +29,12 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send({ data: card }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.message));
+      }
+      next(err);
+    });
 };
 
 const putLikeById = (req, res, next) => {
